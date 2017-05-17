@@ -14,3 +14,11 @@ A WooCommerce plugin to allow your Wordpress to start accepting Ethereum payment
 
 ## Order Updates for Customer
 <img src="http://i.imgur.com/jma1mYq.png">
+
+## Todo Features and Fixes
+- [ ] Use store currency to convert ETH amount (not just USD)
+- [ ] Auto complete order option for purchase
+- [ ] Redirect customer to order page after 'PAID' is triggered
+- [ ] Include ethereum transaction ID in order meta tags.
+- [ ] Make customer notes hyperlinks for the ethereum transactions.
+- [ ] Include current ETH value in order meta tags
