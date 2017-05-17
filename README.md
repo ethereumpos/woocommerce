@@ -1,6 +1,8 @@
 # Ethereum POS WooCommerce Plugin
 [EthereumPOS Example WooCommerce Store](https://wordpress.ethereumpos.com/) using Ropsten Testnet.
 
+Download Latest Version: [EthereumPOS WooCommerce Plugin](https://github.com/ethereumpos/woocommerce/releases)
+
 A WooCommerce plugin to allow your Wordpress to start accepting Ethereum payments via EthereumPOS.com. You first need to register on EthereumPOS.com to get the API keys. Once you have your API keys you can begin accepting Ethereum in the Testnet (Ropsten) and Mainnet. 
 
 ## Simple QR Code Payments
