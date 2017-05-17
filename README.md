@@ -1,5 +1,5 @@
 # Ethereum POS WooCommerce Plugin
-[EthereumPOS Example WooCommerce Store](https://wordpress.ethereumpos.com/) using Ropsten Testnet.
+See the example wordpress site [EthereumPOS WooCommerce Store](https://wordpress.ethereumpos.com/) using Ropsten Testnet.
 
 Download Latest Version: [EthereumPOS WooCommerce Plugin](https://github.com/ethereumpos/woocommerce/releases)
 
