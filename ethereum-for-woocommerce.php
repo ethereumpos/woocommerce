@@ -86,9 +86,10 @@ function ethereum_callback()
 
     if ($status == "paid") {
         $order->reduce_order_stock();
-				$order->update_status('processing', __('Ethereum Transaction ID: '.$txid, 'ethereum-for-woocommerce'));
+				$order->add_order_note( __('Ethereum Payment Paid. Transaction ID: ' . $txid, 'ethereum-for-woocommerce'),1);
+				$order->update_status('processing', 'ethereum-for-woocommerce');
     } else if ($status == "complete") {
-				$order->add_order_note( __('Ethereum Payment Complete', 'ethereum-for-woocommerce') );
+				$order->add_order_note( __('Ethereum Payment Complete', 'ethereum-for-woocommerce'),1);
     }
 
 
@@ -135,11 +136,10 @@ function wc_ethereum_gateway_init()
             // Define user set variables
             $this->title        = $this->get_option('title');
             $this->description  = $this->get_option('description');
-            $this->instructions = $this->get_option('instructions', $this->description);
             $this->testmode     = $this->get_option('testmode');
             $this->public_key   = $this->get_option('public_key');
             $this->private_key  = $this->get_option('private_key');
-            $this->callback     = $this->get_option('callback');
+						$this->address  = $this->get_option('address');
 
             // Actions
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, array(
@@ -183,14 +183,6 @@ function wc_ethereum_gateway_init()
                     'default' => 'yes'
                 ),
 
-                'callback' => array(
-                    'title' => __('Callback URL', 'ethereum-for-woocommerce'),
-                    'type' => 'text',
-                    'description' => __('Callback URL for EthereumPOS to approve and confirm payments', 'ethereum-for-woocommerce'),
-                    'default' => __('Ethereum Payment', 'ethereum-for-woocommerce'),
-                    'desc_tip' => true
-                ),
-
                 'public_key' => array(
                     'title' => __('Public API Key', 'ethereum-for-woocommerce'),
                     'type' => 'text',
@@ -207,8 +199,8 @@ function wc_ethereum_gateway_init()
                     'desc_tip' => true
                 ),
 
-                'instructions' => array(
-                    'title' => __('Instructions', 'ethereum-for-woocommerce'),
+                'address' => array(
+                    'title' => __('Ethereum Address', 'ethereum-for-woocommerce'),
                     'type' => 'text',
                     'description' => __('Instructions that will be added to the thank you page and emails.', 'ethereum-for-woocommerce'),
                     'default' => '',
@@ -262,12 +254,12 @@ function wc_ethereum_gateway_init()
             $oid      = $order->get_order_number();
             $amount   = $order->get_total();
             $callback = get_site_url() . '/ethereum_callback';
-
+						$myaddress = $this->address;
 
             $arg_data = array(
                 'ref_id' => $oid,
                 'amount' => $amount,
-                'address' => '0xoksodkokk392dk30kdk93k03',
+                'address' => $myaddress,
                 'callback' => $callback
             );
             $data     = json_encode($arg_data);
@@ -304,7 +296,7 @@ function wc_ethereum_gateway_init()
                 "eth_address" => $ethaddr
             );
 
-						$order->add_order_note( __('EthereumPOS.com Order ID: ' . $ethoid . ' Pay Exactly ' . $ethamount . ' ETH to Address: ' . $ethaddr, 'ethereum-for-woocommerce') );
+						$order->add_order_note( __('EthereumPOS.com Order ID: ' . $ethoid . ' Pay Exactly ' . $ethamount . ' ETH to Address: ' . $ethaddr, 'ethereum-for-woocommerce'),1);
 
             $querystring = http_build_query($payload);
 
@@ -317,3 +309,5 @@ function wc_ethereum_gateway_init()
 
     } // end \WC_Gateway_Ethereum class
 }
+
+?>
