@@ -9,3 +9,6 @@ A WooCommerce plugin to allow your Wordpress to start accepting Ethereum payment
 
 ## Basic Configuration
 <img src="http://i.imgur.com/jHduoNL.png">
+
+## Order Updates for Customer
+<img src="http://i.imgur.com/jma1mYq.png">
