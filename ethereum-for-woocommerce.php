@@ -20,7 +20,7 @@
  * @copyright Copyright (c) 2017, Ethereum POS
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  *
- * This offline gateway forks the WooCommerce core "Cheque" payment gateway to create another Ethereum Payment method.
+ * This will automatically convert USD to ETH price and allow a customer to pay the ETH value of Dollar amount
  */
 
 defined('ABSPATH') or exit;
@@ -135,7 +135,7 @@ function wc_ethereum_gateway_init()
 
             // Define user set variables
             $this->title       = "Pay with Ethereum";
-            $this->description = "On the next page you'll be able to pay your order with Ethereum (ETH). <p><small><a target=\"_blank\" href=\"https://ethereumpos.com\">Powered by EthereumPOS.com</a></small>";
+            $this->description = "On the next page you'll be able to pay your order with Ethereum (ETH). <p><small><a target=\"_blank\" href=\"https://ethereumpos.com\" style=\"text-align: center;float: left;width: 100%;margin-top: 5px;\">Powered by EthereumPOS.com</a></small>";
             $this->testmode    = $this->get_option('testmode');
             $this->public_key  = $this->get_option('public_key');
             $this->private_key = $this->get_option('private_key');
