@@ -56,11 +56,11 @@ add_filter('woocommerce_payment_gateways', 'wc_ethereum_add_to_gateways');
  */
 function wc_ethereum_gateway_plugin_links($links)
 {
-
+    
     $plugin_links = array(
         '<a href="' . admin_url('admin.php?page=wc-settings&tab=checkout&section=ethereum_gateway') . '">' . __('Configure', 'ethereum-for-woocommerce') . '</a>'
     );
-
+    
     return array_merge($plugin_links, $links);
 }
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'wc_ethereum_gateway_plugin_links');
@@ -81,18 +81,18 @@ function ethereum_callback()
     $refid  = $data['ref_id'];
     $txid   = $data['transaction_id'];
     $status = $data['status'];
-
+    
     $order = wc_get_order($refid);
-
+    
     if ($status == "paid") {
         $order->reduce_order_stock();
-				$order->add_order_note( __('Ethereum Payment Paid. Transaction ID: ' . $txid, 'ethereum-for-woocommerce'),1);
-				$order->update_status('processing', 'ethereum-for-woocommerce');
+        $order->add_order_note(__('Ethereum Payment Paid.<br>Transaction ID: ' . $txid, 'ethereum-for-woocommerce'), 1);
+        $order->update_status('processing', 'ethereum-for-woocommerce');
     } else if ($status == "complete") {
-				$order->add_order_note( __('Ethereum Payment Complete', 'ethereum-for-woocommerce'),1);
+        $order->add_order_note(__('Ethereum Payment Complete.', 'ethereum-for-woocommerce'), 1);
     }
-
-
+    
+    
     echo "<p>It works! $refid and $txid </p>";
 }
 
@@ -113,34 +113,34 @@ add_action('plugins_loaded', 'wc_ethereum_gateway_init', 11);
 
 function wc_ethereum_gateway_init()
 {
-
+    
     class WC_Gateway_Ethereum extends WC_Payment_Gateway
     {
-
+        
         /**
          * Constructor for the gateway.
          */
         public function __construct()
         {
-
+            
             $this->id                 = 'ethereum_gateway';
             $this->icon               = apply_filters('woocommerce_offline_icon', '');
             $this->has_fields         = false;
             $this->method_title       = __('Ethereum', 'ethereum-for-woocommerce');
             $this->method_description = __('Allows Ethereum Payments. Very handy if you use your cheque gateway for another payment method, and can help with testing. Orders are marked as "on-hold" when received.', 'ethereum-for-woocommerce');
-
+            
             // Load the settings.
             $this->init_form_fields();
             $this->init_settings();
-
+            
             // Define user set variables
-            $this->title        = $this->get_option('title');
-            $this->description  = $this->get_option('description');
-            $this->testmode     = $this->get_option('testmode');
-            $this->public_key   = $this->get_option('public_key');
-            $this->private_key  = $this->get_option('private_key');
-						$this->address  = $this->get_option('address');
-
+            $this->title       = $this->get_option('title');
+            $this->description = $this->get_option('description');
+            $this->testmode    = $this->get_option('testmode');
+            $this->public_key  = $this->get_option('public_key');
+            $this->private_key = $this->get_option('private_key');
+            $this->address     = $this->get_option('address');
+            
             // Actions
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, array(
                 $this,
@@ -150,39 +150,39 @@ function wc_ethereum_gateway_init()
                 $this,
                 'thankyou_page'
             ));
-
+            
             // Customer Emails
             add_action('woocommerce_email_before_order_table', array(
                 $this,
                 'email_instructions'
             ), 10, 3);
         }
-
-
-
-
+        
+        
+        
+        
         /**
          * Initialize Gateway Settings Form Fields
          */
         public function init_form_fields()
         {
-
+            
             $this->form_fields = apply_filters('wc_offline_form_fields', array(
-
+                
                 'enabled' => array(
                     'title' => __('Enable/Disable', 'ethereum-for-woocommerce'),
                     'type' => 'checkbox',
                     'label' => __('Enable Ethereum Payment', 'ethereum-for-woocommerce'),
                     'default' => 'yes'
                 ),
-
+                
                 'testmode' => array(
                     'title' => __('Use Testnet', 'ethereum-for-woocommerce'),
                     'type' => 'checkbox',
                     'label' => __('Enable Testmode using Ropsten Ethereum Testnet', 'ethereum-for-woocommerce'),
                     'default' => 'yes'
                 ),
-
+                
                 'public_key' => array(
                     'title' => __('Public API Key', 'ethereum-for-woocommerce'),
                     'type' => 'text',
@@ -190,7 +190,7 @@ function wc_ethereum_gateway_init()
                     'default' => __('', 'ethereum-for-woocommerce'),
                     'desc_tip' => true
                 ),
-
+                
                 'private_key' => array(
                     'title' => __('Secret API Key', 'ethereum-for-woocommerce'),
                     'type' => 'text',
@@ -198,7 +198,7 @@ function wc_ethereum_gateway_init()
                     'default' => __('', 'ethereum-for-woocommerce'),
                     'desc_tip' => true
                 ),
-
+                
                 'address' => array(
                     'title' => __('Ethereum Address', 'ethereum-for-woocommerce'),
                     'type' => 'text',
@@ -208,19 +208,19 @@ function wc_ethereum_gateway_init()
                 )
             ));
         }
-
-
+        
+        
         /**
          * Output for the order received page.
          */
         public function thankyou_page()
         {
-            $eth_id = $_GET['eth_id'];
-						$added_text = "<iframe src=\"https://ethereumpos.com/payment/$eth_id\" style=\"width: 100%;height: 310px;border: 0;\"></iframe>";
-						return $added_text;
+            $eth_id     = $_GET['eth_id'];
+            $added_text = "<iframe src=\"https://ethereumpos.com/payment/$eth_id\" style=\"width: 100%;height: 310px;border: 0;\"></iframe>";
+            return $added_text;
         }
-
-
+        
+        
         /**
          * Add content to the WC emails.
          *
@@ -231,13 +231,13 @@ function wc_ethereum_gateway_init()
          */
         public function email_instructions($order, $sent_to_admin, $plain_text = false)
         {
-
+            
             if ($this->instructions && !$sent_to_admin && $this->id === $order->payment_method && $order->has_status('on-hold')) {
                 echo wpautop(wptexturize($this->instructions)) . PHP_EOL;
             }
         }
-
-
+        
+        
         /**
          * Process the payment and return the result
          *
@@ -246,16 +246,21 @@ function wc_ethereum_gateway_init()
          */
         public function process_payment($order_id)
         {
-
+            
             $order = wc_get_order($order_id);
-
-            $post_url = 'https://testapi.ethereumpos.com/order';
-
-            $oid      = $order->get_order_number();
-            $amount   = $order->get_total();
-            $callback = get_site_url() . '/ethereum_callback';
-						$myaddress = $this->address;
-
+            
+            $testmode = $this->testmode;
+            if ($testmode == true) {
+                $post_url = 'https://testapi.ethereumpos.com/order';
+            } else {
+                $post_url = 'https://api.ethereumpos.com/order';
+            }
+            
+            $oid       = $order->get_order_number();
+            $amount    = $order->get_total();
+            $callback  = get_site_url() . '/ethereum_callback';
+            $myaddress = $this->address;
+            
             $arg_data = array(
                 'ref_id' => $oid,
                 'amount' => $amount,
@@ -263,9 +268,9 @@ function wc_ethereum_gateway_init()
                 'callback' => $callback
             );
             $data     = json_encode($arg_data);
-
+            
             $auth = $this->private_key;
-
+            
             $args = array(
                 'headers' => array(
                     'Content-Type' => 'application/json',
@@ -273,41 +278,40 @@ function wc_ethereum_gateway_init()
                 ),
                 'body' => $data
             );
-
+            
             $response = wp_remote_post(esc_url_raw($post_url), $args);
-
+            
             $response_body = wp_remote_retrieve_body($response);
-
+            
             $result = json_decode($response_body);
-
+            
             // Mark as on-hold (we're awaiting the payment)
             $order->update_status('pending', __('Awaiting Ethereum Payment', 'ethereum-for-woocommerce'));
-
+            
             // Remove cart
             WC()->cart->empty_cart();
-
-						$ethoid = $result->id;
-						$ethaddr = $result->address;
-						$ethamount = $result->expected_amount;
-
+            
+            $ethoid    = $result->id;
+            $ethaddr   = $result->address;
+            $ethamount = $result->expected_amount;
+            
             $payload = array(
                 "eth_id" => $ethoid,
-								"eth_amount" => $ethamount,
+                "eth_amount" => $ethamount,
                 "eth_address" => $ethaddr
             );
-
-						$order->add_order_note( __('EthereumPOS.com Order ID: ' . $ethoid . ' Pay Exactly ' . $ethamount . ' ETH to Address: ' . $ethaddr, 'ethereum-for-woocommerce'),1);
-
+            
+            $order->add_order_note(__('EthereumPOS.com Order ID: ' . $ethoid . '<br>Pay Exactly ' . $ethamount . ' ETH<br>Send to Address: ' . $ethaddr . '<br>', 'ethereum-for-woocommerce'), 1);
+            
             $querystring = http_build_query($payload);
-
+            
             // Return thankyou redirect
             return array(
                 'result' => 'success',
                 'redirect' => $this->get_return_url($order) . '&' . $querystring
             );
         }
-
+        
     } // end \WC_Gateway_Ethereum class
 }
 
-?>
