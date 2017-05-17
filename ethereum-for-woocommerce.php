@@ -127,15 +127,15 @@ function wc_ethereum_gateway_init()
             $this->icon               = apply_filters('woocommerce_offline_icon', '');
             $this->has_fields         = false;
             $this->method_title       = __('Ethereum POS', 'ethereum-for-woocommerce');
-            $this->method_description = __('Allows Ethereum Payments to be accept on your wordpress woocommerce site', 'ethereum-for-woocommerce');
+            $this->method_description = __('Allow Ethereum Payments to be accepted on your wordpress woocommerce site', 'ethereum-for-woocommerce');
 
             // Load the settings.
             $this->init_form_fields();
             $this->init_settings();
 
             // Define user set variables
-            $this->title       = $this->get_option('title');
-            $this->description = $this->get_option('description');
+            $this->title       = "Pay with Ethereum";
+            $this->description = "On the next page you'll be able to pay your order with Ethereum (ETH). <p><small><a target=\"_blank\" href=\"https://ethereumpos.com\">Powered by EthereumPOS.com</a></small>";
             $this->testmode    = $this->get_option('testmode');
             $this->public_key  = $this->get_option('public_key');
             $this->private_key = $this->get_option('private_key');
